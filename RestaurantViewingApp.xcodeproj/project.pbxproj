@@ -11,6 +11,7 @@
 		8E03165D255B71D800769F3E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E03165B255B71D800769F3E /* Main.storyboard */; };
 		8E03165F255B71E500769F3E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8E03165E255B71E500769F3E /* Assets.xcassets */; };
 		8E031662255B71E500769F3E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E031660255B71E500769F3E /* LaunchScreen.storyboard */; };
+		8E2385342567F15D00598CDE /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E2385332567F15D00598CDE /* NetworkService.swift */; };
 		8E596636255F7DD800973B94 /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E596635255F7DD800973B94 /* BaseView.swift */; };
 		8E59663A255F7ED900973B94 /* DetailsFoodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E596639255F7ED900973B94 /* DetailsFoodView.swift */; };
 		8E59663C255F812D00973B94 /* DetailsFoodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E59663B255F812D00973B94 /* DetailsFoodViewController.swift */; };
@@ -19,6 +20,7 @@
 		8E59664B255F877B00973B94 /* LocationPermissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E59664A255F877B00973B94 /* LocationPermissionViewController.swift */; };
 		8E59664D255F899000973B94 /* LocationPermissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E59664C255F899000973B94 /* LocationPermissionView.swift */; };
 		8E7C2208255F924700527AD6 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7C2207255F924700527AD6 /* LocationService.swift */; };
+		8E93B955256931FE007B691D /* DataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E93B954256931FE007B691D /* DataModels.swift */; };
 		8F3D6F8608AAB0387D06782D /* Pods_RestaurantViewingApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79F033840677AA150B3CB62F /* Pods_RestaurantViewingApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -32,6 +34,7 @@
 		8E03165E255B71E500769F3E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8E031661255B71E500769F3E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8E031663255B71E500769F3E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8E2385332567F15D00598CDE /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		8E596635255F7DD800973B94 /* BaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseView.swift; sourceTree = "<group>"; };
 		8E596639255F7ED900973B94 /* DetailsFoodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsFoodView.swift; sourceTree = "<group>"; };
 		8E59663B255F812D00973B94 /* DetailsFoodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsFoodViewController.swift; sourceTree = "<group>"; };
@@ -40,6 +43,7 @@
 		8E59664A255F877B00973B94 /* LocationPermissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPermissionViewController.swift; sourceTree = "<group>"; };
 		8E59664C255F899000973B94 /* LocationPermissionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPermissionView.swift; sourceTree = "<group>"; };
 		8E7C2207255F924700527AD6 /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
+		8E93B954256931FE007B691D /* DataModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModels.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +121,7 @@
 		8E59663D255F835200973B94 /* RestaurantsListScreen */ = {
 			isa = PBXGroup;
 			children = (
+				8E93B953256931DA007B691D /* DataModels */,
 				8E596642255F846B00973B94 /* Views */,
 				8E59663F255F83F300973B94 /* TableViewController */,
 			);
@@ -176,8 +181,17 @@
 			isa = PBXGroup;
 			children = (
 				8E7C2207255F924700527AD6 /* LocationService.swift */,
+				8E2385332567F15D00598CDE /* NetworkService.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		8E93B953256931DA007B691D /* DataModels */ = {
+			isa = PBXGroup;
+			children = (
+				8E93B954256931FE007B691D /* DataModels.swift */,
+			);
+			path = DataModels;
 			sourceTree = "<group>";
 		};
 		C66A1D64A30EFB4E1DD825F4 /* Frameworks */ = {
@@ -312,7 +326,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E2385342567F15D00598CDE /* NetworkService.swift in Sources */,
 				8E596636255F7DD800973B94 /* BaseView.swift in Sources */,
+				8E93B955256931FE007B691D /* DataModels.swift in Sources */,
 				8E59664D255F899000973B94 /* LocationPermissionView.swift in Sources */,
 				8E7C2208255F924700527AD6 /* LocationService.swift in Sources */,
 				8E596644255F84B000973B94 /* RestaurantsListsTableViewCell.swift in Sources */,

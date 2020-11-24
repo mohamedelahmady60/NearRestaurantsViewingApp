@@ -8,44 +8,27 @@
 
 import UIKit
 
+
+protocol LocationPermissionViewControllerDelegate: class {
+    func didTapAllow()
+}
+
 class LocationPermissionViewController: UIViewController {
  
     //MARK: - Outlet
     @IBOutlet weak var locationPermissionView: LocationPermissionView!
     
     //MARK: - variables
-    var locationService: LocationService?
+    weak var delegate: LocationPermissionViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // request the authorization to the location from the user when he press allow button
-        locationPermissionView.didTapAllow = { [weak self] in
-            self?.locationService?.requestLocationAuthorization()
+        locationPermissionView.didTapAllow = {
+            self.delegate?.didTapAllow()
         }
         
-        //when the authorization Status change
-        locationService?.didChangeStatus = { [weak self] status in
-            if status {
-                //start getting the location
-                self?.locationService?.getLocation()
-            }
-        }
-        
-        //when we get a response from the core location
-        locationService?.didGetResponse = { [weak self] response in
-            
-            switch response {
-            case .failure(let error):
-                assertionFailure("Error getting the location \(error)")
-            case .success(let location):
-                print(location.coordinate.latitude)
-                print(location.coordinate.longitude)
-
-                
-            }
-            
-        }
         // Do any additional setup after loading the view.
     }
     

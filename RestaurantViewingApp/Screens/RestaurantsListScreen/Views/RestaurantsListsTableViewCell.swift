@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import AlamofireImage
+
 
 class RestaurantsListsTableViewCell: UITableViewCell {
 
@@ -27,6 +29,15 @@ class RestaurantsListsTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
+    }
+    
+    
+    //this function is used to configure the cell
+    func configure(CellDataModel: ResturantListTableViewCellDataModel) {
+        self.restaurantNameLabel.text = CellDataModel.name
+        //download the image from the URL and pass it to the cell image view
+        self.restaurantImageView.af.setImage(withURL: CellDataModel.imageUrl)
+        self.restaurantLocationLabel.text = CellDataModel.formattedDistance
     }
 
 }
