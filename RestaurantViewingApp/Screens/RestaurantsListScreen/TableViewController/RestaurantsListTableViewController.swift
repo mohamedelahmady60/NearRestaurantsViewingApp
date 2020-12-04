@@ -9,16 +9,24 @@
 import UIKit
 import AlamofireImage
 
+protocol RestaurantsListTableViewControllerDelegate: class {
+    func didTapCell(_ viewModel:RestaurantListTableViewCellDataModel)
+}
+
+
+
 class RestaurantsListTableViewController: UITableViewController {
 
     
     // the cell data that sent from the AppDelegate
-    var resturantListTableViewTotalCellsDataModel = [ResturantListTableViewCellDataModel]() {
-        
+    var restaurantListTableViewTotalCellsDataModel = [RestaurantListTableViewCellDataModel]() {
         didSet {
             tableView.reloadData()
         }
     }
+    
+    weak var delegate: RestaurantsListTableViewControllerDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -27,7 +35,7 @@ class RestaurantsListTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return resturantListTableViewTotalCellsDataModel.count
+        return restaurantListTableViewTotalCellsDataModel.count
     }
 
     
@@ -35,12 +43,17 @@ class RestaurantsListTableViewController: UITableViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "RestauranstListCell", for: indexPath) as! RestaurantsListsTableViewCell
         //get the current cell data
-        let resturantListTableViewCurrentCellDataModel = resturantListTableViewTotalCellsDataModel[indexPath.row]
+        let resturantListTableViewCurrentCellDataModel = restaurantListTableViewTotalCellsDataModel[indexPath.row]
         //Configure the cell
         cell.configure(CellDataModel: resturantListTableViewCurrentCellDataModel)
         
         return cell
     }
     
+    //MARK: - Table view delegate methods
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let viewModel = restaurantListTableViewTotalCellsDataModel[indexPath.row]
+        delegate?.didTapCell(viewModel)
+    }
 
 }

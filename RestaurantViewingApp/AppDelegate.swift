@@ -30,13 +30,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //to decode the JSON data to Swift data
     let JsonDecoder = JSONDecoder()
     
+    let restaurantsListTableViewController = RestaurantsListTableViewController()
     
-    
+    var navigationControllerHolder: UINavigationController?
     
     //MARK: - Functions
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
         
         //when the authorization Status change
         locationService.didChangeStatus = { [weak self] status in
@@ -58,16 +58,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
             
         }
+              
+        restaurantsListTableViewController.delegate = self
         
-        
-        
-        //choose the initial view
+        //MARK: - choose the initial view
         self.goToSuitableInitialView()
         
         return true
     }
     
     
+    
+    //MARK: - this function used to load the restaurants
     private func loadBusinesses(with coordinates: CLLocationCoordinate2D) {
         
         //to convert from SnakeCase (Python) to camelCase (Swift)
@@ -80,33 +82,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     guard let strongSelf = self else { return }
                     // decode the JSON data
                     let businessesDecodedData = try strongSelf.JsonDecoder.decode(BusinessesDecodedData.self, from: response.data)
+                    
                     // define the array of cells
-                    let resturantListTableViewTotalCellsDataModel = businessesDecodedData.businesses.compactMap(ResturantListTableViewCellDataModel.init)
+                    let resturantListTableViewTotalCellsDataModel = businessesDecodedData.businesses.compactMap(RestaurantListTableViewCellDataModel.init)
                         .sorted { ($0.distance < $1.distance )}
+                    
                     // jump to the RestuarantsListTableViewController to view the resturants
-                    if let navigationController = strongSelf.window.rootViewController as? UINavigationController {
-                        
-                        print("Hello1")
-                        
-                        if let restuarantsListTableViewController = navigationController.topViewController as? RestaurantsListTableViewController {
-                            
-                            
-                            print("Hello2")
-                            
-                            restuarantsListTableViewController.resturantListTableViewTotalCellsDataModel = resturantListTableViewTotalCellsDataModel
-                        }
+                    let navigationController = strongSelf.storyboard
+                        .instantiateViewController(identifier: "RestaurantNavigationController") as? UINavigationController
+                    strongSelf.navigationControllerHolder = navigationController
+                    strongSelf.window.rootViewController = navigationController
+                    (navigationController?.topViewController as? RestaurantsListTableViewController)?.delegate = self
+
+                    
+                    if let restaurantsListTableViewController = navigationController?.topViewController as? RestaurantsListTableViewController {
+                        restaurantsListTableViewController.restaurantListTableViewTotalCellsDataModel = resturantListTableViewTotalCellsDataModel
                     }
+                    strongSelf.window.makeKeyAndVisible()
+                    
                 } catch {
                     print("Error Decoding Data \(error)")
                 }
+                
+                
             case .failure(let error):
                 print("error Getting Response \(error)")
             }
         }
-        
-        
     }
     
+    
+    //MARK: - this function is used to do to the suitable initial view
     private func goToSuitableInitialView() {
         //check the current authorization status
         switch locationService.authorizationStatus {
@@ -114,29 +120,60 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             // go to the permission view controller to ask about the permission
             let locationPermissionViewController = storyboard
                 .instantiateViewController(identifier: "LocationPermissionViewController") as? LocationPermissionViewController
-            //locationPermissionViewController?.delegate = self
+            locationPermissionViewController?.delegate = self
             window.rootViewController = locationPermissionViewController
             
         default:
             // go to the RestuarantsListTableViewController (the top view of the navigation Controller)
             let navigationController = storyboard
                 .instantiateViewController(identifier: "RestaurantNavigationController") as? UINavigationController
+            self.navigationControllerHolder = navigationController
             window.rootViewController = navigationController
-            //locationService.getLocation()
+            locationService.getLocation()
+            (navigationController?.topViewController as? RestaurantsListTableViewController)?.delegate = self
         }
         window.makeKeyAndVisible()
     }
     
+    
+    //MARK: - this function is used to load restaurant details
+    private func loadRestaurantDetails(id: String) {
+        
+        JsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+        service.request(.details(id: id)) { [weak self ] (result) in
+            switch result {
+            case .success(let response):
+                guard let strongSelf = self else { return }
+                do {
+                    // decode the JSON data
+                    let resturantDetails = try strongSelf.JsonDecoder.decode(ResturantDetails.self, from: response.data)
+                    let restaurantDetailsViewDataModel = RestaurantDetailsViewDataModel(resturantDetails: resturantDetails)
+                    (strongSelf.navigationControllerHolder?.topViewController as? DetailsFoodViewController)?.restaurantDetailsViewDataModel = restaurantDetailsViewDataModel
+                 }catch {print("Error decoding data\(error)")}
+                
+            case .failure(let error):
+                print ("Failed to get data\(error)")
+            }
+        }
+    }
+
 }
 
 
+
+//MARK: - LocationPermissionViewControllerDelegate
 extension AppDelegate: LocationPermissionViewControllerDelegate {
     
     //when the user presses allow we will request the authorization
     func didTapAllow() {
         locationService.requestLocationAuthorization()
-    }
-    
-    
+    }    
 }
 
+
+//MARK: - RestaurantsListTableViewControllerDelegate
+extension AppDelegate: RestaurantsListTableViewControllerDelegate{
+    func didTapCell(_ viewModel: RestaurantListTableViewCellDataModel) {
+        self.loadRestaurantDetails(id: viewModel.id)
+    }
+}

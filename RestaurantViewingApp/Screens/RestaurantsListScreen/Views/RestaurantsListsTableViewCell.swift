@@ -33,7 +33,7 @@ class RestaurantsListsTableViewCell: UITableViewCell {
     
     
     //this function is used to configure the cell
-    func configure(CellDataModel: ResturantListTableViewCellDataModel) {
+    func configure(CellDataModel: RestaurantListTableViewCellDataModel) {
         self.restaurantNameLabel.text = CellDataModel.name
         //download the image from the URL and pass it to the cell image view
         self.restaurantImageView.af.setImage(withURL: CellDataModel.imageUrl)

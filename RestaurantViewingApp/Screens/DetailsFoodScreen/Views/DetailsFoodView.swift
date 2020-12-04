@@ -14,18 +14,18 @@ import MapKit
     //MARK: - Outlets
     
     //collection view
-    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var collectionView: UICollectionView?
    //page control
-    @IBOutlet weak var pageControl: UIPageControl!
+    @IBOutlet weak var pageControl: UIPageControl?
 
     //labels
-    @IBOutlet weak var pricLabel: UILabel!
-    @IBOutlet weak var hoursLabel: UILabel!
-    @IBOutlet weak var locationLabel: UILabel!
-    @IBOutlet weak var ratingsLabel: UILabel!
+    @IBOutlet weak var pricLabel: UILabel?
+    @IBOutlet weak var hoursLabel: UILabel?
+    @IBOutlet weak var locationLabel: UILabel?
+    @IBOutlet weak var ratingsLabel: UILabel?
 
     //map view
-    @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var mapView: MKMapView?
     
     
     //MARK: - Actions
@@ -35,8 +35,5 @@ import MapKit
         
     }
         
-
-    
-    
 }
 
