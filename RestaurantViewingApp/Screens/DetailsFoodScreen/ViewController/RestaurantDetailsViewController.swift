@@ -12,7 +12,7 @@ import CoreLocation
 import MapKit
 
 
-class DetailsFoodViewController: UIViewController {
+class RestaurantDetailsViewController: UIViewController {
 
     // IBoutlet from our view
     @IBOutlet weak var detailsFoodView: DetailsFoodView?
@@ -60,7 +60,7 @@ class DetailsFoodViewController: UIViewController {
 
 
 //MARK: - Collection View data source Methods
-extension DetailsFoodViewController: UICollectionViewDataSource {
+extension RestaurantDetailsViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return restaurantDetailsViewDataModel?.imageUrls.count ?? 0
@@ -87,7 +87,7 @@ extension DetailsFoodViewController: UICollectionViewDataSource {
 
 
 //MARK: - Collection View delegate Methods
-extension DetailsFoodViewController: UICollectionViewDelegateFlowLayout {
+extension RestaurantDetailsViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
      

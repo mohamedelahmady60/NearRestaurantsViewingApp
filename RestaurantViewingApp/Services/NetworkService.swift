@@ -42,7 +42,7 @@ enum YelpService :TargetType {
         switch self {
         case .search(let latitude, let longtide):
             return .requestParameters(
-                parameters: ["latitude": latitude, "longitude": longtide, "limit": 10],
+                parameters: ["latitude": latitude, "longitude": longtide, "limit": 25],
                 encoding: URLEncoding.queryString)
         case .details:
             return .requestPlain

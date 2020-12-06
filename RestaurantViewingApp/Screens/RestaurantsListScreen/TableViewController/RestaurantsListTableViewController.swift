@@ -10,7 +10,7 @@ import UIKit
 import AlamofireImage
 
 protocol RestaurantsListTableViewControllerDelegate: class {
-    func didTapCell(_ viewModel:RestaurantListTableViewCellDataModel)
+    func didTapCell(_ viewController: UIViewController, viewModel:RestaurantListTableViewCellDataModel)
 }
 
 
@@ -52,8 +52,12 @@ class RestaurantsListTableViewController: UITableViewController {
     
     //MARK: - Table view delegate methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        guard let restaurantDetailsViewController = storyboard?.instantiateViewController(withIdentifier: "RestaurantDetailsViewController") else { return }
+        navigationController?.pushViewController(restaurantDetailsViewController, animated: true)
+        
         let viewModel = restaurantListTableViewTotalCellsDataModel[indexPath.row]
-        delegate?.didTapCell(viewModel)
+        delegate?.didTapCell(restaurantDetailsViewController, viewModel: viewModel)
     }
 
 }

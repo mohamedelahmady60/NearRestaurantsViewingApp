@@ -58,7 +58,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
             
         }
-              
+        
         restaurantsListTableViewController.delegate = self
         
         //MARK: - choose the initial view
@@ -76,35 +76,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         JsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
         //request URL to get the data
         service.request(.search(latitude: coordinates.latitude, longtide: coordinates.longitude)) { [weak self](result) in
+            
+            guard let strongSelf = self else { return }
+            
             switch result {
             case .success(let response):
                 do {
-                    guard let strongSelf = self else { return }
                     // decode the JSON data
                     let businessesDecodedData = try strongSelf.JsonDecoder.decode(BusinessesDecodedData.self, from: response.data)
-                    
                     // define the array of cells
                     let resturantListTableViewTotalCellsDataModel = businessesDecodedData.businesses.compactMap(RestaurantListTableViewCellDataModel.init)
                         .sorted { ($0.distance < $1.distance )}
                     
-                    // jump to the RestuarantsListTableViewController to view the resturants
-                    let navigationController = strongSelf.storyboard
-                        .instantiateViewController(identifier: "RestaurantNavigationController") as? UINavigationController
-                    strongSelf.navigationControllerHolder = navigationController
-                    strongSelf.window.rootViewController = navigationController
-                    (navigationController?.topViewController as? RestaurantsListTableViewController)?.delegate = self
+                    if let navigationController = strongSelf.window.rootViewController as? UINavigationController,
+                        let restaurantsListTableViewController = navigationController.topViewController as? RestaurantsListTableViewController {
+                        restaurantsListTableViewController.restaurantListTableViewTotalCellsDataModel = resturantListTableViewTotalCellsDataModel ?? []
+                    } else if let navigationController = strongSelf.storyboard
+                        .instantiateViewController(identifier: "RestaurantNavigationController") as? UINavigationController {
+                        strongSelf.navigationControllerHolder = navigationController
+                        strongSelf.window.rootViewController?.present(navigationController, animated: true, completion: {
+                            (navigationController.topViewController as? RestaurantsListTableViewController)?.delegate = self
+                            (navigationController.topViewController as? RestaurantsListTableViewController)?.restaurantListTableViewTotalCellsDataModel = resturantListTableViewTotalCellsDataModel ?? []
 
-                    
-                    if let restaurantsListTableViewController = navigationController?.topViewController as? RestaurantsListTableViewController {
-                        restaurantsListTableViewController.restaurantListTableViewTotalCellsDataModel = resturantListTableViewTotalCellsDataModel
+                        })
                     }
-                    strongSelf.window.makeKeyAndVisible()
+                    
                     
                 } catch {
-                    print("Error Decoding Data \(error)")
+                    print("error decoding data \(error)")
                 }
-                
-                
             case .failure(let error):
                 print("error Getting Response \(error)")
             }
@@ -137,7 +137,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     
     //MARK: - this function is used to load restaurant details
-    private func loadRestaurantDetails(id: String) {
+    private func loadRestaurantDetails(for viewController: UIViewController, withID id: String) {
         
         JsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
         service.request(.details(id: id)) { [weak self ] (result) in
@@ -148,15 +148,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     // decode the JSON data
                     let resturantDetails = try strongSelf.JsonDecoder.decode(ResturantDetails.self, from: response.data)
                     let restaurantDetailsViewDataModel = RestaurantDetailsViewDataModel(resturantDetails: resturantDetails)
-                    (strongSelf.navigationControllerHolder?.topViewController as? DetailsFoodViewController)?.restaurantDetailsViewDataModel = restaurantDetailsViewDataModel
-                 }catch {print("Error decoding data\(error)")}
+                    (viewController as? RestaurantDetailsViewController)?.restaurantDetailsViewDataModel = restaurantDetailsViewDataModel
+                }catch {print("Error decoding data\(error)")}
                 
             case .failure(let error):
                 print ("Failed to get data\(error)")
             }
         }
     }
-
+    
 }
 
 
@@ -173,7 +173,8 @@ extension AppDelegate: LocationPermissionViewControllerDelegate {
 
 //MARK: - RestaurantsListTableViewControllerDelegate
 extension AppDelegate: RestaurantsListTableViewControllerDelegate{
-    func didTapCell(_ viewModel: RestaurantListTableViewCellDataModel) {
-        self.loadRestaurantDetails(id: viewModel.id)
+    
+    func didTapCell(_ viewController: UIViewController, viewModel: RestaurantListTableViewCellDataModel) {
+        loadRestaurantDetails(for: viewController, withID: viewModel.id)
     }
 }
