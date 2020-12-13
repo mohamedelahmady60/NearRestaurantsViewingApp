@@ -13,8 +13,7 @@ This app is used to view the nearest restaurants according to your location
 
 
 
-
-#let's take a look:
+# let's take a look:
 
 1- You first should give the app the permission to use you location by pressing Allow button.
 
