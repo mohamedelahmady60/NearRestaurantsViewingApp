@@ -3,13 +3,13 @@ This app is used to view the nearest restaurants according to your location
 
 # The objective of this application is to practice:
 
-1- AutoLayout. 
+- AutoLayout. 
 
-2- Dealing with TableViews, mapViews, pagecontrols and collectionViews.
+- Dealing with TableViews, mapViews, pagecontrols and collectionViews.
 
-3- Dealing with CoreLocation to get the current location.
+- Dealing with CoreLocation to get the current location.
 
-4- APIs handling using Moya library.
+- APIs handling using Moya library.
 
 
 
